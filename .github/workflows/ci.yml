@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  typecheck-and-build:
+    name: Typecheck & Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build TypeScript libs
+        run: pnpm run typecheck:libs
+
+      - name: Typecheck API server
+        run: pnpm --filter @workspace/api-server run typecheck
+
+      - name: Typecheck frontend
+        run: pnpm --filter @workspace/brain-games run typecheck
+
+      - name: Build frontend
+        env:
+          PORT: "3000"
+          BASE_PATH: /Lorapok-GameSpark/
+          NODE_ENV: production
+        run: pnpm --filter @workspace/brain-games run build

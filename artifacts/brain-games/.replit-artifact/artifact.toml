@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Brain Games"
+version = "1.0.0"
+id = "artifacts/brain-games"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 18637
+
+[services.development]
+run = "pnpm --filter @workspace/brain-games run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/brain-games", "run", "build" ]
+publicDir = "artifacts/brain-games/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "18637"
+BASE_PATH = "/"

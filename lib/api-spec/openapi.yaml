@@ -1,0 +1,242 @@
+openapi: 3.1.0
+info:
+  title: Api
+  version: 0.1.0
+  description: Brain Games API
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: games
+    description: Game operations
+  - name: scores
+    description: Score operations
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+
+  /games:
+    get:
+      operationId: listGames
+      tags: [games]
+      summary: List all available games
+      responses:
+        "200":
+          description: List of games
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Game"
+
+  /games/daily:
+    get:
+      operationId: getDailyChallenge
+      tags: [games]
+      summary: Get today's daily challenge progress
+      responses:
+        "200":
+          description: Today's daily challenge
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DailyChallenge"
+
+  /scores:
+    get:
+      operationId: listScores
+      tags: [scores]
+      summary: List recent scores
+      parameters:
+        - name: gameType
+          in: query
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of scores
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Score"
+    post:
+      operationId: submitScore
+      tags: [scores]
+      summary: Submit a game score
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ScoreInput"
+      responses:
+        "201":
+          description: Score submitted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Score"
+
+  /scores/stats:
+    get:
+      operationId: getStats
+      tags: [scores]
+      summary: Get overall player statistics
+      responses:
+        "200":
+          description: Player stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PlayerStats"
+
+  /scores/leaderboard:
+    get:
+      operationId: getLeaderboard
+      tags: [scores]
+      summary: Get top scores per game type
+      responses:
+        "200":
+          description: Leaderboard entries
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/LeaderboardEntry"
+
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+
+    Game:
+      type: object
+      required: [id, name, type, description, difficulty, instructions]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        type:
+          type: string
+          enum: [memory_match, number_sequence, word_scramble]
+        description:
+          type: string
+        difficulty:
+          type: string
+          enum: [easy, medium, hard]
+        instructions:
+          type: string
+        bestScore:
+          type: ["integer", "null"]
+
+    DailyChallenge:
+      type: object
+      required: [date, games, completedCount, totalGames]
+      properties:
+        date:
+          type: string
+        games:
+          type: array
+          items:
+            $ref: "#/components/schemas/Game"
+        completedCount:
+          type: integer
+        totalGames:
+          type: integer
+
+    Score:
+      type: object
+      required: [id, gameType, gameName, score, duration, completedAt]
+      properties:
+        id:
+          type: integer
+        gameType:
+          type: string
+        gameName:
+          type: string
+        score:
+          type: integer
+        duration:
+          type: integer
+          description: Duration in seconds
+        completedAt:
+          type: string
+
+    ScoreInput:
+      type: object
+      required: [gameType, score, duration]
+      properties:
+        gameType:
+          type: string
+          enum: [memory_match, number_sequence, word_scramble]
+        score:
+          type: integer
+        duration:
+          type: integer
+
+    PlayerStats:
+      type: object
+      required: [totalGamesPlayed, currentStreak, longestStreak, averageScore, gamesPlayedToday, dailyGoal]
+      properties:
+        totalGamesPlayed:
+          type: integer
+        currentStreak:
+          type: integer
+        longestStreak:
+          type: integer
+        averageScore:
+          type: integer
+        gamesPlayedToday:
+          type: integer
+        dailyGoal:
+          type: integer
+        bestScores:
+          type: object
+          properties:
+            memory_match:
+              type: ["integer", "null"]
+            number_sequence:
+              type: ["integer", "null"]
+            word_scramble:
+              type: ["integer", "null"]
+
+    LeaderboardEntry:
+      type: object
+      required: [gameType, gameName, score, duration, completedAt]
+      properties:
+        gameType:
+          type: string
+        gameName:
+          type: string
+        score:
+          type: integer
+        duration:
+          type: integer
+        completedAt:
+          type: string
