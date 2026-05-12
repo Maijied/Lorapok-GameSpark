@@ -33,7 +33,7 @@ export function Navbar() {
         <div className="container mx-auto px-4 h-16 flex items-center justify-between max-w-5xl">
           <Link href="/" className="flex items-center">
             <img
-              src="/logo.png"
+              src={`${import.meta.env.BASE_URL}logo.png`}
               alt="Lorapok BrainSpark"
               className="h-9 w-auto object-contain object-left"
               style={{ maxWidth: "200px" }}

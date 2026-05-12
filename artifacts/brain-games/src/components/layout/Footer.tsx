@@ -48,7 +48,7 @@ export function Footer() {
               className="block"
             >
               <img
-                src="/logo.png"
+                src={`${import.meta.env.BASE_URL}logo.png`}
                 alt="Lorapok BrainSpark"
                 className="h-12 w-auto object-contain"
                 style={{ imageRendering: "auto" }}

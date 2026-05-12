@@ -14,8 +14,10 @@ export default function Home() {
   const { user } = useAuth();
   const [authOpen, setAuthOpen] = useState(false);
 
-  const { data: dailyChallenge, isLoading: challengeLoading } = useGetDailyChallenge({ query: { queryKey: getGetDailyChallengeQueryKey(), placeholderData: STATIC_DAILY_CHALLENGE } });
-  const { data: games, isLoading: gamesLoading } = useListGames({ query: { queryKey: getListGamesQueryKey(), placeholderData: STATIC_GAMES } });
+  const { data: _dailyChallenge, isLoading: challengeLoading } = useGetDailyChallenge({ query: { queryKey: getGetDailyChallengeQueryKey(), retry: false } });
+  const dailyChallenge = _dailyChallenge ?? STATIC_DAILY_CHALLENGE;
+  const { data: _games, isLoading: gamesLoading } = useListGames({ query: { queryKey: getListGamesQueryKey(), retry: false } });
+  const games = _games ?? STATIC_GAMES;
 
   const { data: stats, isLoading: statsLoading } = useQuery({
     queryKey: ["firestore", "stats", user?.uid],

@@ -28,7 +28,8 @@ export default function GameCanvas() {
   const { user } = useAuth();
   const [authOpen, setAuthOpen] = useState(false);
 
-  const { data: games, isLoading } = useListGames({ query: { queryKey: getListGamesQueryKey(), placeholderData: STATIC_GAMES } });
+  const { data: _games, isLoading } = useListGames({ query: { queryKey: getListGamesQueryKey(), retry: false } });
+  const games = _games ?? STATIC_GAMES;
 
   const [gameState, setGameState] = useState<GameState>("intro");
   const [results, setResults] = useState<{ score: number; duration: number } | null>(null);
