@@ -2,20 +2,45 @@ import { useEffect, useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { Heart, Timer } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { seededShuffle } from "@/lib/seeded-random";
 
 interface WordScrambleProps {
   onComplete: (score: number, duration: number) => void;
+  seed?: number;
 }
 
 const WORDS = [
-  "PUZZLE", "MEMORY", "FOCUS", "BRAIN", "LOGIC", 
+  "PUZZLE", "MEMORY", "FOCUS", "BRAIN", "LOGIC",
   "SMART", "THINK", "GENIUS", "NEURON", "SOLVE",
   "MENTAL", "WONDER", "BRIGHT", "CLEVER", "SYNAPSE",
-  "RECALL", "WISDOM", "REASON", "ATTENT", "ACUMEN"
+  "RECALL", "WISDOM", "REASON", "ATTENT", "ACUMEN",
 ];
 
-export default function WordScramble({ onComplete }: WordScrambleProps) {
-  const [wordList] = useState(() => [...WORDS].sort(() => Math.random() - 0.5).slice(0, 10));
+function scrambleWord(word: string, wordSeed?: number): string {
+  const letters = word.split("");
+  let result: string;
+  if (wordSeed !== undefined) {
+    result = seededShuffle(letters, wordSeed).join("");
+    if (result === word && word.length > 1) {
+      result = seededShuffle(letters, wordSeed + 1).join("");
+    }
+  } else {
+    result = word;
+    let attempts = 0;
+    while (result === word && word.length > 1 && attempts < 10) {
+      result = [...letters].sort(() => Math.random() - 0.5).join("");
+      attempts++;
+    }
+  }
+  return result;
+}
+
+export default function WordScramble({ onComplete, seed }: WordScrambleProps) {
+  const [wordList] = useState(() =>
+    seed !== undefined
+      ? seededShuffle([...WORDS], seed).slice(0, 10)
+      : [...WORDS].sort(() => Math.random() - 0.5).slice(0, 10)
+  );
   const [currentIndex, setCurrentIndex] = useState(0);
   const [scrambled, setScrambled] = useState("");
   const [userInput, setUserInput] = useState("");
@@ -23,53 +48,40 @@ export default function WordScramble({ onComplete }: WordScrambleProps) {
   const [lives, setLives] = useState(3);
   const [seconds, setSeconds] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
-  
-  const currentWord = wordList[currentIndex] || "";
+
+  const currentWord = wordList[currentIndex] ?? "";
 
   useEffect(() => {
-    // Timer
-    const interval = setInterval(() => {
-      setSeconds(s => s + 1);
-    }, 1000);
+    const interval = setInterval(() => setSeconds(s => s + 1), 1000);
     return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
     if (currentWord) {
-      // Scramble word, ensuring it's actually different
-      let scrambledWord = currentWord;
-      while (scrambledWord === currentWord && currentWord.length > 1) {
-        scrambledWord = currentWord.split('').sort(() => Math.random() - 0.5).join('');
-      }
-      setScrambled(scrambledWord);
+      const wordSeed = seed !== undefined ? seed + currentIndex * 7919 : undefined;
+      setScrambled(scrambleWord(currentWord, wordSeed));
       setUserInput("");
       inputRef.current?.focus();
     } else if (wordList.length > 0 && currentIndex >= wordList.length) {
-      // Game finished successfully
-      finishGame();
+      const finalScore = Math.max(0, score + lives * 50 - seconds);
+      onComplete(finalScore, seconds);
     }
-  }, [currentIndex, currentWord, wordList.length]);
-
-  const finishGame = () => {
-    const timePenalty = seconds;
-    const finalScore = Math.max(0, score + (lives * 50) - timePenalty);
-    onComplete(finalScore, seconds);
-  };
+  }, [currentIndex, currentWord]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!userInput) return;
 
     if (userInput.toUpperCase() === currentWord) {
-      // Correct
       setScore(s => s + 100);
       setCurrentIndex(i => i + 1);
     } else {
-      // Wrong
-      setLives(l => l - 1);
+      const newLives = lives - 1;
+      setLives(newLives);
       setUserInput("");
-      if (lives <= 1) {
-        finishGame();
+      if (newLives <= 0) {
+        const finalScore = Math.max(0, score + newLives * 50 - seconds);
+        onComplete(finalScore, seconds);
       }
     }
   };
@@ -82,7 +94,7 @@ export default function WordScramble({ onComplete }: WordScrambleProps) {
         </div>
         <div className="flex items-center gap-1">
           {[1, 2, 3].map(i => (
-            <Heart key={i} className={`w-5 h-5 ${i <= lives ? 'fill-red-500 text-red-500' : 'text-zinc-700'}`} />
+            <Heart key={i} className={`w-5 h-5 ${i <= lives ? "fill-red-500 text-red-500" : "text-zinc-700"}`} />
           ))}
         </div>
         <div>WORDS: <span className="text-white font-bold">{currentIndex}/{wordList.length}</span></div>
@@ -111,7 +123,7 @@ export default function WordScramble({ onComplete }: WordScrambleProps) {
           />
         </form>
       </div>
-      
+
       <div className="text-zinc-500 text-sm">
         Score: <span className="text-white font-bold">{score}</span>
       </div>

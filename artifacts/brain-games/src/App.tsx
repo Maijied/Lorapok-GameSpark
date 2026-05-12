@@ -7,6 +7,7 @@ import { Layout } from "@/components/layout/Layout";
 import Home from "@/pages/Home";
 import Scores from "@/pages/Scores";
 import GameCanvas from "@/pages/GameCanvas";
+import MultiplayerCanvas from "@/pages/MultiplayerCanvas";
 import { AuthProvider } from "@/contexts/AuthContext";
 
 const queryClient = new QueryClient();
@@ -18,6 +19,7 @@ function Router() {
         <Route path="/" component={Home} />
         <Route path="/scores" component={Scores} />
         <Route path="/game/:type" component={GameCanvas} />
+        <Route path="/multiplayer/:type" component={MultiplayerCanvas} />
         <Route component={NotFound} />
       </Switch>
     </Layout>

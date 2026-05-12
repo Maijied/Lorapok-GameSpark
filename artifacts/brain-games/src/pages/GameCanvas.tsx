@@ -3,7 +3,7 @@ import { useParams, useLocation, Link } from "wouter";
 import { useListGames, getListGamesQueryKey } from "@workspace/api-client-react";
 import { STATIC_GAMES } from "@/lib/static-games";
 import { useQueryClient } from "@tanstack/react-query";
-import { ArrowLeft, Trophy } from "lucide-react";
+import { ArrowLeft, Trophy, Swords } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import MemoryMatch from "@/components/games/MemoryMatch";
@@ -138,8 +138,18 @@ export default function GameCanvas() {
                   className="w-full h-14 text-lg font-bold rounded-xl shadow-[0_0_40px_-10px_rgba(124,58,237,0.5)] transition-all hover:scale-105"
                   onClick={() => setGameState("playing")}
                 >
-                  Start Game
+                  Start Solo
                 </Button>
+
+                <Link href={`/multiplayer/${type}`} className="block mt-3">
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="w-full h-12 font-semibold rounded-xl border-zinc-700 hover:border-primary hover:text-primary transition-all gap-2"
+                  >
+                    <Swords className="w-4 h-4" /> Challenge a Friend
+                  </Button>
+                </Link>
               </motion.div>
             )}
 
