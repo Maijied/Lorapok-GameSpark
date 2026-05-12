@@ -96,13 +96,13 @@ export default function GameCanvas() {
       <div className="flex-1 bg-zinc-950 flex flex-col relative overflow-hidden text-zinc-100">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] max-w-[800px] max-h-[800px] bg-primary/10 rounded-full blur-[120px] pointer-events-none" />
 
-        <div className="absolute top-0 left-0 right-0 p-4 flex justify-between items-center z-10">
+        <div className="relative flex-shrink-0 px-4 py-3 flex justify-between items-center z-10">
           <Link href="/">
             <Button variant="ghost" size="sm" className="text-zinc-400 hover:text-white hover:bg-white/10">
               <ArrowLeft className="w-4 h-4 mr-2" /> Back
             </Button>
           </Link>
-          <div className="font-mono text-sm tracking-widest text-zinc-500 uppercase">{game.name}</div>
+          <div className="font-mono text-xs sm:text-sm tracking-widest text-zinc-500 uppercase">{game.name}</div>
         </div>
 
         <div className="flex-1 flex items-center justify-center p-4 sm:p-8 z-0 w-full max-w-4xl mx-auto">
