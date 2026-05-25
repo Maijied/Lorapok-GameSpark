@@ -144,7 +144,15 @@ components:
           type: string
         type:
           type: string
-          enum: [memory_match, number_sequence, word_scramble]
+          enum:
+            - memory_match
+            - number_sequence
+            - word_scramble
+            - math_sprint
+            - color_stroop
+            - reaction_blitz
+            - pattern_iq
+            - trivia_quest
         description:
           type: string
         difficulty:
@@ -194,7 +202,15 @@ components:
       properties:
         gameType:
           type: string
-          enum: [memory_match, number_sequence, word_scramble]
+          enum:
+            - memory_match
+            - number_sequence
+            - word_scramble
+            - math_sprint
+            - color_stroop
+            - reaction_blitz
+            - pattern_iq
+            - trivia_quest
         score:
           type: integer
         duration:
@@ -224,6 +240,16 @@ components:
             number_sequence:
               type: ["integer", "null"]
             word_scramble:
+              type: ["integer", "null"]
+            math_sprint:
+              type: ["integer", "null"]
+            color_stroop:
+              type: ["integer", "null"]
+            reaction_blitz:
+              type: ["integer", "null"]
+            pattern_iq:
+              type: ["integer", "null"]
+            trivia_quest:
               type: ["integer", "null"]
 
     LeaderboardEntry:

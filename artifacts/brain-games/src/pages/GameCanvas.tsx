@@ -9,6 +9,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 import MemoryMatch from "@/components/games/MemoryMatch";
 import NumberSequence from "@/components/games/NumberSequence";
 import WordScramble from "@/components/games/WordScramble";
+import MathSprint from "@/components/games/MathSprint";
+import ColorStroop from "@/components/games/ColorStroop";
+import ReactionBlitz from "@/components/games/ReactionBlitz";
+import PatternIQ from "@/components/games/PatternIQ";
+import TriviaQuest from "@/components/games/TriviaQuest";
 import GameResults from "@/components/games/GameResults";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
@@ -16,6 +21,17 @@ import { AuthModal } from "@/components/auth/AuthModal";
 import { submitScore } from "@/lib/firestore";
 
 type GameState = "intro" | "playing" | "results";
+
+const ALL_GAME_TYPES = [
+  "memory_match",
+  "number_sequence",
+  "word_scramble",
+  "math_sprint",
+  "color_stroop",
+  "reaction_blitz",
+  "pattern_iq",
+  "trivia_quest",
+] as const;
 
 const STATS_QUERY_KEY = ["firestore", "stats"];
 const SCORES_QUERY_KEY = ["firestore", "scores"];
@@ -47,7 +63,7 @@ export default function GameCanvas() {
     setGameState("results");
 
     if (!user) return;
-    if (!type || !["memory_match", "number_sequence", "word_scramble"].includes(type)) return;
+    if (!type || !(ALL_GAME_TYPES as readonly string[]).includes(type)) return;
 
     setSubmitting(true);
     try {
@@ -161,9 +177,14 @@ export default function GameCanvas() {
                 exit={{ opacity: 0 }}
                 className="w-full h-full flex flex-col items-center justify-center"
               >
-                {type === "memory_match" && <MemoryMatch onComplete={handleGameComplete} />}
-                {type === "number_sequence" && <NumberSequence onComplete={handleGameComplete} />}
-                {type === "word_scramble" && <WordScramble onComplete={handleGameComplete} />}
+                {type === "memory_match"    && <MemoryMatch     onComplete={handleGameComplete} />}
+                {type === "number_sequence" && <NumberSequence  onComplete={handleGameComplete} />}
+                {type === "word_scramble"   && <WordScramble    onComplete={handleGameComplete} />}
+                {type === "math_sprint"     && <MathSprint      onComplete={handleGameComplete} />}
+                {type === "color_stroop"    && <ColorStroop     onComplete={handleGameComplete} />}
+                {type === "reaction_blitz"  && <ReactionBlitz   onComplete={handleGameComplete} />}
+                {type === "pattern_iq"      && <PatternIQ       onComplete={handleGameComplete} />}
+                {type === "trivia_quest"    && <TriviaQuest     onComplete={handleGameComplete} />}
               </motion.div>
             )}
 

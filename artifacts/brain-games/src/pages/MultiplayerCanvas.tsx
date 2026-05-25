@@ -10,6 +10,11 @@ import { AuthModal } from "@/components/auth/AuthModal";
 import MemoryMatch from "@/components/games/MemoryMatch";
 import NumberSequence from "@/components/games/NumberSequence";
 import WordScramble from "@/components/games/WordScramble";
+import MathSprint from "@/components/games/MathSprint";
+import ColorStroop from "@/components/games/ColorStroop";
+import ReactionBlitz from "@/components/games/ReactionBlitz";
+import PatternIQ from "@/components/games/PatternIQ";
+import TriviaQuest from "@/components/games/TriviaQuest";
 import {
   createRoom,
   joinRoom,
@@ -32,9 +37,14 @@ type PageState =
   | "error";
 
 const GAME_NAMES: Record<string, string> = {
-  memory_match: "Memory Match",
+  memory_match:    "Memory Match",
   number_sequence: "Number Sequence",
-  word_scramble: "Word Scramble",
+  word_scramble:   "Word Scramble",
+  math_sprint:     "Math Sprint",
+  color_stroop:    "Color Stroop",
+  reaction_blitz:  "Reaction Blitz",
+  pattern_iq:      "Pattern IQ",
+  trivia_quest:    "Trivia Quest",
 };
 
 function initials(name: string) {
@@ -110,12 +120,10 @@ export default function MultiplayerCanvas() {
   const gameName = GAME_NAMES[type ?? ""] ?? "Game";
   const gameInfo = STATIC_GAMES.find(g => g.type === type);
 
-  // Sync auth state
   useEffect(() => {
     if (user && pageState === "auth") setPageState("lobby");
   }, [user]);
 
-  // Start countdown when room.status === 'playing'
   useEffect(() => {
     if (room?.status === "playing" && pageState === "waiting" && !countdownStarted.current) {
       countdownStarted.current = true;
@@ -136,7 +144,6 @@ export default function MultiplayerCanvas() {
     }
   }, [room?.status, pageState]);
 
-  // Cleanup listener on unmount
   useEffect(() => () => { unsubRef.current?.(); }, []);
 
   const subscribeToRoom = useCallback((roomId: string) => {
@@ -214,7 +221,6 @@ export default function MultiplayerCanvas() {
     setPageState("lobby");
   };
 
-  // Derived for results
   const hostResult = room?.hostResult ?? null;
   const guestResult = room?.guestResult ?? null;
   const bothDone = !!hostResult && !!guestResult;
@@ -229,7 +235,6 @@ export default function MultiplayerCanvas() {
       <div className="flex-1 bg-zinc-950 flex flex-col text-zinc-100 overflow-hidden relative">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] max-w-[700px] max-h-[700px] bg-primary/10 rounded-full blur-[120px] pointer-events-none" />
 
-        {/* Header */}
         <div className="relative flex-shrink-0 px-4 py-3 flex justify-between items-center z-10">
           <Link href={`/game/${type}`}>
             <Button variant="ghost" size="sm" className="text-zinc-400 hover:text-white hover:bg-white/10">
@@ -245,7 +250,6 @@ export default function MultiplayerCanvas() {
         <div className="flex-1 flex items-center justify-center p-4 sm:p-8 z-0 w-full max-w-4xl mx-auto overflow-y-auto">
           <AnimatePresence mode="wait">
 
-            {/* AUTH */}
             {pageState === "auth" && (
               <motion.div key="auth" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                 className="text-center max-w-sm w-full">
@@ -256,7 +260,6 @@ export default function MultiplayerCanvas() {
               </motion.div>
             )}
 
-            {/* LOBBY */}
             {pageState === "lobby" && (
               <motion.div key="lobby" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}
                 className="w-full max-w-md space-y-6">
@@ -303,7 +306,6 @@ export default function MultiplayerCanvas() {
               </motion.div>
             )}
 
-            {/* LOADING */}
             {pageState === "loading" && (
               <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                 className="text-center">
@@ -312,7 +314,6 @@ export default function MultiplayerCanvas() {
               </motion.div>
             )}
 
-            {/* WAITING */}
             {pageState === "waiting" && room && (
               <motion.div key="waiting" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}
                 className="text-center max-w-sm w-full space-y-6">
@@ -346,7 +347,6 @@ export default function MultiplayerCanvas() {
               </motion.div>
             )}
 
-            {/* COUNTDOWN */}
             {pageState === "countdown" && (
               <motion.div key="countdown" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                 className="text-center">
@@ -366,17 +366,20 @@ export default function MultiplayerCanvas() {
               </motion.div>
             )}
 
-            {/* PLAYING */}
             {pageState === "playing" && room && (
               <motion.div key="playing" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                 className="w-full h-full flex flex-col items-center justify-center">
-                {gameType === "memory_match" && <MemoryMatch onComplete={handleGameComplete} seed={room.seed} />}
-                {gameType === "number_sequence" && <NumberSequence onComplete={handleGameComplete} seed={room.seed} />}
-                {gameType === "word_scramble" && <WordScramble onComplete={handleGameComplete} seed={room.seed} />}
+                {gameType === "memory_match"    && <MemoryMatch     onComplete={handleGameComplete} seed={room.seed} />}
+                {gameType === "number_sequence" && <NumberSequence  onComplete={handleGameComplete} seed={room.seed} />}
+                {gameType === "word_scramble"   && <WordScramble    onComplete={handleGameComplete} seed={room.seed} />}
+                {gameType === "math_sprint"     && <MathSprint      onComplete={handleGameComplete} seed={room.seed} />}
+                {gameType === "color_stroop"    && <ColorStroop     onComplete={handleGameComplete} seed={room.seed} />}
+                {gameType === "reaction_blitz"  && <ReactionBlitz   onComplete={handleGameComplete} seed={room.seed} />}
+                {gameType === "pattern_iq"      && <PatternIQ       onComplete={handleGameComplete} seed={room.seed} />}
+                {gameType === "trivia_quest"    && <TriviaQuest     onComplete={handleGameComplete} seed={room.seed} />}
               </motion.div>
             )}
 
-            {/* WAITING FOR RESULT */}
             {pageState === "waiting-result" && room && (
               <motion.div key="waiting-result" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                 className="text-center max-w-sm w-full space-y-6">
@@ -392,7 +395,6 @@ export default function MultiplayerCanvas() {
               </motion.div>
             )}
 
-            {/* FINISHED */}
             {pageState === "finished" && room && room.guest && (
               <motion.div key="finished" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
                 className="w-full max-w-xl space-y-6">
@@ -404,20 +406,8 @@ export default function MultiplayerCanvas() {
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
-                  <PlayerCard
-                    player={room.host}
-                    label="Host"
-                    result={room.hostResult}
-                    isWinner={!isTie && hostWins}
-                    waiting={!room.hostResult}
-                  />
-                  <PlayerCard
-                    player={room.guest}
-                    label="Guest"
-                    result={room.guestResult}
-                    isWinner={!isTie && guestWins}
-                    waiting={!room.guestResult}
-                  />
+                  <PlayerCard player={room.host} label="Host" result={room.hostResult} isWinner={!isTie && hostWins} waiting={!room.hostResult} />
+                  <PlayerCard player={room.guest} label="Guest" result={room.guestResult} isWinner={!isTie && guestWins} waiting={!room.guestResult} />
                 </div>
 
                 {isTie && (
@@ -435,7 +425,6 @@ export default function MultiplayerCanvas() {
               </motion.div>
             )}
 
-            {/* ERROR */}
             {pageState === "error" && (
               <motion.div key="error" initial={{ opacity: 0 }} animate={{ opacity: 1 }}
                 className="text-center max-w-sm w-full space-y-4">

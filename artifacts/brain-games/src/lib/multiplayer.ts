@@ -9,7 +9,15 @@ import {
 } from "firebase/firestore";
 import { db } from "./firebase";
 
-export type GameType = "memory_match" | "number_sequence" | "word_scramble";
+export type GameType =
+  | "memory_match"
+  | "number_sequence"
+  | "word_scramble"
+  | "math_sprint"
+  | "color_stroop"
+  | "reaction_blitz"
+  | "pattern_iq"
+  | "trivia_quest";
 
 export interface MPPlayer {
   uid: string;

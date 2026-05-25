@@ -34,6 +34,11 @@ export interface PlayerStats {
     memory_match: number | null;
     number_sequence: number | null;
     word_scramble: number | null;
+    math_sprint: number | null;
+    color_stroop: number | null;
+    reaction_blitz: number | null;
+    pattern_iq: number | null;
+    trivia_quest: number | null;
   };
 }
 
@@ -52,6 +57,11 @@ const GAME_NAMES: Record<string, string> = {
   memory_match: "Memory Match",
   number_sequence: "Number Sequence",
   word_scramble: "Word Scramble",
+  math_sprint: "Math Sprint",
+  color_stroop: "Color Stroop",
+  reaction_blitz: "Reaction Blitz",
+  pattern_iq: "Pattern IQ",
+  trivia_quest: "Trivia Quest",
 };
 
 export async function submitScore(payload: {
@@ -86,7 +96,7 @@ export async function getUserScores(uid: string): Promise<FirestoreScore[]> {
     collection(db, "scores"),
     where("uid", "==", uid),
     orderBy("completedAt", "desc"),
-    limit(50)
+    limit(100)
   );
   const snap = await getDocs(q);
   return snap.docs.map((d) => {
@@ -153,15 +163,20 @@ export async function getPlayerStats(uid: string): Promise<PlayerStats> {
     gamesPlayedToday,
     dailyGoal: 3,
     bestScores: {
-      memory_match: best("memory_match"),
+      memory_match:   best("memory_match"),
       number_sequence: best("number_sequence"),
-      word_scramble: best("word_scramble"),
+      word_scramble:  best("word_scramble"),
+      math_sprint:    best("math_sprint"),
+      color_stroop:   best("color_stroop"),
+      reaction_blitz: best("reaction_blitz"),
+      pattern_iq:     best("pattern_iq"),
+      trivia_quest:   best("trivia_quest"),
     },
   };
 }
 
 export async function getLeaderboard(): Promise<LeaderboardEntry[]> {
-  const gameTypes = ["memory_match", "number_sequence", "word_scramble"];
+  const gameTypes = Object.keys(GAME_NAMES);
   const results: LeaderboardEntry[] = [];
 
   for (const gameType of gameTypes) {
