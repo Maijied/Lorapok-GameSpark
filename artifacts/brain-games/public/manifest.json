@@ -1,0 +1,60 @@
+{
+  "name": "Lorapok BrainSpark",
+  "short_name": "BrainSpark",
+  "description": "8 daily brain training games — sharpen memory, logic, reaction speed, and IQ.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "background_color": "#060611",
+  "theme_color": "#7c3aed",
+  "orientation": "portrait-primary",
+  "categories": ["games", "education", "productivity"],
+  "lang": "en",
+  "icons": [
+    {
+      "src": "./logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "./opengraph.jpg",
+      "sizes": "1200x630",
+      "type": "image/jpeg",
+      "form_factor": "wide",
+      "label": "Lorapok BrainSpark Home Screen"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Memory Match",
+      "url": "./game/memory_match",
+      "description": "Train visual memory"
+    },
+    {
+      "name": "Reaction Blitz",
+      "url": "./game/reaction_blitz",
+      "description": "Test your reflexes"
+    },
+    {
+      "name": "Leaderboard",
+      "url": "./scores",
+      "description": "See top scores"
+    }
+  ]
+}

@@ -9,6 +9,7 @@ import Scores from "@/pages/Scores";
 import GameCanvas from "@/pages/GameCanvas";
 import MultiplayerCanvas from "@/pages/MultiplayerCanvas";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { SettingsProvider } from "@/contexts/SettingsContext";
 
 const queryClient = new QueryClient();
 
@@ -30,12 +31,14 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <TooltipProvider>
-          <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
-            <Router />
-          </WouterRouter>
-          <Toaster />
-        </TooltipProvider>
+        <SettingsProvider>
+          <TooltipProvider>
+            <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+              <Router />
+            </WouterRouter>
+            <Toaster />
+          </TooltipProvider>
+        </SettingsProvider>
       </AuthProvider>
     </QueryClientProvider>
   );

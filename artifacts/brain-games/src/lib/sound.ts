@@ -1,4 +1,9 @@
 let ctx: AudioContext | null = null;
+let _muted = false;
+
+export function setSoundMuted(muted: boolean) {
+  _muted = muted;
+}
 
 function getCtx(): AudioContext {
   if (!ctx) ctx = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
@@ -12,6 +17,7 @@ function tone(
   vol = 0.12,
   delay = 0,
 ) {
+  if (_muted) return;
   try {
     const ac = getCtx();
     if (ac.state === "suspended") ac.resume();
