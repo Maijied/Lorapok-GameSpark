@@ -92,7 +92,7 @@ export default function Home() {
                 { label: "Games Played", value: stats.totalGamesPlayed },
                 { label: "Avg Score", value: stats.averageScore },
                 { label: "Best Streak", value: `${stats.longestStreak}d` },
-                { label: "Avg Score", value: stats.averageScore },
+                { label: "Today", value: `${stats.gamesPlayedToday}/${stats.dailyGoal}` },
               ].map(({ label, value }, i) => (
                 <div key={i} className="bg-card border border-border rounded-xl px-4 py-3 text-center">
                   <div className="text-2xl font-black">{value}</div>
