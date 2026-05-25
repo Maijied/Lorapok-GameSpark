@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useLocation, Link } from "wouter";
-import { Trophy, Home, LogOut, User } from "lucide-react";
+import { Trophy, Home, LogOut, User, Zap } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { AuthModal } from "@/components/auth/AuthModal";
 import { Button } from "@/components/ui/button";
@@ -12,6 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { motion } from "framer-motion";
 
 export function Navbar() {
   const [location] = useLocation();
@@ -31,13 +32,40 @@ export function Navbar() {
     <>
       <nav className="border-b border-border bg-card/60 backdrop-blur-md sticky top-0 z-50">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between max-w-5xl">
-          <Link href="/" className="flex items-center">
-            <img
-              src={`${import.meta.env.BASE_URL}logo.png`}
-              alt="Lorapok BrainSpark"
-              className="h-9 w-auto object-contain object-left"
-              style={{ maxWidth: "200px" }}
-            />
+
+          <Link href="/" className="flex items-center gap-2 group">
+            <motion.div
+              className="relative"
+              animate={{ y: [0, -3, 0] }}
+              transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <motion.img
+                src={`${import.meta.env.BASE_URL}logo.png`}
+                alt="Lorapok BrainSpark"
+                className="h-12 w-auto object-contain object-left"
+                style={{
+                  maxWidth: "220px",
+                  filter: "drop-shadow(0 0 10px rgba(124,58,237,0.55))",
+                }}
+                animate={{
+                  filter: [
+                    "drop-shadow(0 0 8px rgba(124,58,237,0.45))",
+                    "drop-shadow(0 0 18px rgba(124,58,237,0.75))",
+                    "drop-shadow(0 0 8px rgba(124,58,237,0.45))",
+                  ],
+                }}
+                transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+              />
+            </motion.div>
+
+            <motion.span
+              className="hidden sm:flex items-center gap-1 text-[10px] font-black tracking-[0.2em] uppercase text-primary/70 bg-primary/10 border border-primary/20 px-2 py-0.5 rounded-full"
+              initial={{ opacity: 0, x: -8 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.5 }}
+            >
+              <Zap className="w-2.5 h-2.5" /> v2
+            </motion.span>
           </Link>
 
           <div className="flex items-center gap-2">
